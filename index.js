@@ -1,11 +1,26 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const app = express();
+const port = process.env.PORT || 3000;
+const mongoose = require('mongoose');
+require('dotenv').config();
+const { connect, close } = require('./db/db.js');
+
+// connect to database
+connect();
 
 
-mongoose.connect(  process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => app.listen(3000)).then(() => console.log("Connected to database and listening on port: "+3000));
+// middleware
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Hello world");
-})
+// routes
+// app.get("/test", (req, res) => {
+//     res.send("Hello World");
+//     res.sendStatus(200);
+//     });
+
+// console.log(process.env.PORT);
+
+// start server
+app.listen(port, () => console.log(`Listening on port ${port}`));
