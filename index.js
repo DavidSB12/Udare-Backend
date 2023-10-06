@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 require('dotenv').config();
 const { connect, close } = require('./db/db.js');
+const routes = require('./routes/routes.js');
 
 // connect to database
 connect();
@@ -15,10 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // routes
-// app.get("/test", (req, res) => {
-//     res.send("Hello World");
-//     res.sendStatus(200);
-//     });
+app.use('/', routes);
+app.get("/test", (req, res) => {
+    res.send("Hello World");
+    res.sendStatus(200);
+    });
 
 // console.log(process.env.PORT);
 
