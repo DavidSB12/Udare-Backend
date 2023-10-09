@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    id : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "User"
-    },
     username: {
         type: String,
         required: [true, 'Username is required.'],
@@ -25,19 +21,33 @@ const userSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
-    profile : {
-        name : String,
-        bio : String,
-        profilePic : String,
-        followers : [{
-            type : mongoose.Schema.Types.ObjectId,
-            ref : "User"
+    profile: {
+        name: {
+            type: String,
+            default: 'Unspecified' 
+        },
+        bio: {
+            type: String,
+            default: 'Unspecified' 
+        },
+        profilePic: {
+            type: String,
+            default: 'Unspecified' 
+        },
+        followers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         }],
-        following : [{
-            type : mongoose.Schema.Types.ObjectId,
-            ref : "User"
+        following: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         }],
-    },
+    }
+         
+    
 });
 
+
 const User = mongoose.model('User', userSchema);
+
+module.exports = User; 

@@ -4,9 +4,9 @@ const  Challenge  = require('../../model/Challenge.js');
 
 
 // get all challenges
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
    try {
-    const challenges = Challenge.find();
+    const challenges = await Challenge.find();
     res.json(challenges);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -55,5 +55,6 @@ router.delete('/:id', (req, res) => {
         .then(() => res.json('Challenge deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
 });
+
 
 module.exports = router;

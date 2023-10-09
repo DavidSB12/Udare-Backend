@@ -7,7 +7,8 @@ const { connect, close } = require('./db/db.js');
 const routes = require('./routes/routes.js');
 
 // connect to database
-connect();
+connect()
+    
 
 
 // middleware
