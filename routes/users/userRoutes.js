@@ -19,7 +19,6 @@ router.get("/", async (req, res) => {
 // Get a user by ID
 router.get("/:id", async (req, res) => {
     const userId = req.params.id;
-  
     try {
       const user = await User.findById(userId);
       if (!user) {

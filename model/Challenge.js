@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const challengeSchema = new mongoose.Schema({
-    id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Challenge"
-    },
     title: {
         type: String,
         required: [true, 'Title is required.'],

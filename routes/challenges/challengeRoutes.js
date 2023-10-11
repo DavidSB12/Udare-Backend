@@ -5,55 +5,84 @@ const  Challenge  = require('../../model/Challenge.js');
 
 // get all challenges
 router.get('/', async (req, res) => {
-   try {
-    const challenges = await Challenge.find();
-    res.json(challenges);
-    } catch (err) {
+    let challenges;
+    try {
+        challenges = await Challenge.find();
+        return res.status(200).json(challenges);
+    }
+    catch(err) {
         res.status(500).json({ message: err.message });
-   }
+    }
 });
 
 // get a challenge by id
-router.get('/:id', (req, res) => {
-    Challenge.findById(req.params.id)
-        .then(challenge => res.json(challenge))
-        .catch(err => res.status(400).json('Error: ' + err));
+router.get('/:id', async (req, res) => {
+    const clallengeId = req.params.id;
+    try {
+      const challenge = await Challenge.findById(clallengeId);
+      if (!challenge) {
+        return res.status(404).json({ message: 'Challenge not found.' });
+      }
+      res.status(200).json(challenge);
+    } 
+    catch (error) {
+      console.error('Error getting challenge by ID:', error);
+      res.status(500).json({ error: 'Error retrieving challenge by ID.' });
+    }
 });
 
 // create a challenge
-router.post('/add', (req, res) => {
-    const newChallenge = new Challenge({
-        title: req.body.title,
-        description: req.body.description,
-        category: req.body.category,
-    });
-
-    newChallenge.save()
-        .then(() => res.json('Challenge added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+router.post('/add', async (req, res) => {
+    const { title, description, category } = req.body;
+    try {
+        const newChallenge = new Challenge({
+        title,
+        description,
+        category,
+        });
+        await newChallenge.save();
+        res.status(201).json(newChallenge);
+    } 
+    catch (error) {
+        console.error('Error adding a new challenge:', error);
+        res.status(500).json({ error: 'Error adding a new challenge' });
     }
-);
+})
 
-// update a challenge
-router.post('/update/:id', (req, res) => {
-    Challenge.findById(req.params.id)
-        .then(challenge => {
-            challenge.title = req.body.title;
-            challenge.description = req.body.description;
-            challenge.category = req.body.category;
-
-            challenge.save()
-                .then(() => res.json('Challenge updated!'))
-                .catch(err => res.status(400).json('Error: ' + err));
-        })
-        .catch(err => res.status(400).json('Error ' + err));
+// update a challenge by id
+router.put('/:id', async (req, res) => {
+    const challengeID = req.params.id;
+    const updatedChallengeData = req.body;
+  
+    try {
+      const updatedChallenge = await Challenge.findByIdAndUpdate(challengeID, updatedChallengeData, { new: true });
+      if (!updatedChallenge) {
+        return res.status(404).json({ message: 'Challenge not found.' });
+      }
+      res.status(200).json(updatedChallenge);
+    } 
+    catch (error) {
+      console.error('Error updating challenge by ID:', error);
+      res.status(500).json({ error: 'Error updating challenge by ID.' });
+    }
 });
 
-// delete a challenge
-router.delete('/:id', (req, res) => {
-    Challenge.findByIdAndDelete(req.params.id)
-        .then(() => res.json('Challenge deleted.'))
-        .catch(err => res.status(400).json('Error: ' + err));
+// delete a challenge by id
+router.delete('/:id', async (req, res) => {
+    const challengeId = req.params.id;
+  
+    try {
+      const deletedChallenge = await Challenge.findByIdAndRemove(challengeId);
+  
+      if (!deletedChallenge) {
+        return res.status(404).json({ message: 'Challenge not found.' });
+      }
+      res.status(200).json({ message: 'Challenge deleted successfully.' });
+    } 
+    catch (error) {
+      console.error('Error deleting challenge by ID:', error);
+      res.status(500).json({ error: 'Error deleting challenge by ID.' });
+    }
 });
 
 
