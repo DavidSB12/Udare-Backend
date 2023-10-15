@@ -6,7 +6,7 @@ console.log(url);
 //const client = new MongoClient(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
 async function connect() {   
-    await mongoose.connect(url);
+    await mongoose.connect(url);  
     console.log('Connected successfully to server');
 }
 

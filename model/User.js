@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+    }],
     profile: {
         name: {
             type: String,
