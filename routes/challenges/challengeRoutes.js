@@ -15,11 +15,25 @@ router.get('/', async (req, res) => {
     }
 });
 
+// get challenges by category
+router.get('/:category', async (req, res) => {
+  const category = req.params.category;
+  let challenges;
+  try {
+      challenges = await Challenge.find({category: category});
+      return res.status(200).json(challenges);
+  }
+  catch(err) {
+      res.status(500).json({ message: err.message });
+  }
+});
+
+
 // get a challenge by id
 router.get('/:id', async (req, res) => {
-    const clallengeId = req.params.id;
+    const challengeId = req.params.id;
     try {
-      const challenge = await Challenge.findById(clallengeId);
+      const challenge = await Challenge.findById(challengeId);
       if (!challenge) {
         return res.status(404).json({ message: 'Challenge not found.' });
       }
