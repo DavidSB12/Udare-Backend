@@ -3,20 +3,31 @@ const router = express.Router();
 const  Challenge  = require('../../model/Challenge.js');
 
 
-// get all challenges
-router.get('/', async (req, res) => {
-    let challenges;
-    try {
-        challenges = await Challenge.find();
-        return res.status(200).json(challenges);
-    }
-    catch(err) {
-        res.status(500).json({ message: err.message });
-    }
+//obtener los retos diarios
+//5 retos diferentes, uno por cada categoría. 
+router.get('/dailyChallenges', async (req, res) => {     
+  let randomChallenges; 
+  const categories = ["deportes", "cultura", "cocina", "social", "crecimeintopersonal"]
+
+  try {
+      randomChallenges = await Promise.all(
+      categories.map(async (category) => {
+          const challenge = await Challenge.aggregate([
+              { $match: { category: category } },
+              { $sample: { size: 1 } }
+          ]);
+          return challenge[0];
+      })
+    );    
+    res.status(200).json(randomChallenges);
+  }
+  catch(err) {
+      res.status(500).json({ message: err.message });
+  }
 });
 
 // get challenges by category
-router.get('/:category', async (req, res) => {
+router.get('/category/:category', async (req, res) => {
   const category = req.params.category;
   let challenges;
   try {
@@ -27,6 +38,7 @@ router.get('/:category', async (req, res) => {
       res.status(500).json({ message: err.message });
   }
 });
+
 
 
 // get a challenge by id
@@ -44,24 +56,6 @@ router.get('/:id', async (req, res) => {
       res.status(500).json({ error: 'Error retrieving challenge by ID.' });
     }
 });
-
-// create a challenge
-router.post('/add', async (req, res) => {
-    const { title, description, category } = req.body;
-    try {
-        const newChallenge = new Challenge({
-        title,
-        description,
-        category,
-        });
-        await newChallenge.save();
-        res.status(201).json(newChallenge);
-    } 
-    catch (error) {
-        console.error('Error adding a new challenge:', error);
-        res.status(500).json({ error: 'Error adding a new challenge' });
-    }
-})
 
 // update a challenge by id
 router.put('/:id', async (req, res) => {
@@ -97,6 +91,36 @@ router.delete('/:id', async (req, res) => {
       console.error('Error deleting challenge by ID:', error);
       res.status(500).json({ error: 'Error deleting challenge by ID.' });
     }
+});
+
+// create a challenge
+router.post('/add', async (req, res) => {
+  const { title, description, category } = req.body;
+  try {
+      const newChallenge = new Challenge({
+      title,
+      description,
+      category,
+      });
+      await newChallenge.save();
+      res.status(201).json(newChallenge);
+  } 
+  catch (error) {
+      console.error('Error adding a new challenge:', error);
+      res.status(500).json({ error: 'Error adding a new challenge' });
+  }
+})
+
+// get all challenges
+router.get('/', async (req, res) => {  
+  let challenges;
+  try {
+      challenges = await Challenge.find();
+      return res.status(200).json(challenges);
+  }
+  catch(err) {
+      res.status(500).json({ message: err.message });
+  }
 });
 
 
