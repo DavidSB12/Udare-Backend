@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const imageSchema = new moongose.Schema({
-    id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Image"
-    },
     image: {
         type: String,
         required: [true, 'Image is required.'],
