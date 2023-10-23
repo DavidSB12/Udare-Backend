@@ -1,11 +1,15 @@
 const User = require("../model/User.js");
 const { ObjectId } = require('mongodb');
+const ImageUpload = require('../services/ImageUpload.js');
+const singleUpload = ImageUpload.single("image");
 
 
 const getAllUsers = async (req, res) => {
     let users;
+    console.log("getAllUsers");
     try {
         users = await User.find();
+        // console.log(users);
         return res.status(200).json(users);
     }
     catch(err) {
@@ -94,6 +98,32 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
+const uploadImage = async (req, res) => {
+    singleUpload(req, res, function(err) {
+        if (err) {
+            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message}]});
+        }
+        let update = { 'profile.profilePic': req.file.location};
+
+
+        // User.findByIdAndUpdate(req.params.id, profile, {new: true})
+        //     .then(user => {
+        //         res.status(200).json({message: 'Image uploaded successfully.', user});
+        //     })
+        //     .catch(err => {
+        //         res.status(500).json({message: 'Error uploading image.', error: err.message});
+        //     });
+        
+        User.findByIdAndUpdate(req.params.id, update, {new: true})
+            .then(user => {
+                res.status(200).json({message: 'Image uploaded successfully.', user});
+            })
+            .catch(err => {
+                res.status(500).json({message: 'Error uploading image.', error: err.message});
+            });
+    });
+}
+
 
 
 
@@ -102,5 +132,6 @@ module.exports = {
     updateUserById,
     getUserById,
     getAllUsers,
-    addUser
+    addUser,
+    uploadImage,
 }

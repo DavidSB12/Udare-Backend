@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 //const { async } = require('regenerator-runtime');
 
 const url = process.env.MONGO_URI || '';
-console.log(url);
+// console.log(url);
 //const client = new MongoClient(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
 async function connect() {   

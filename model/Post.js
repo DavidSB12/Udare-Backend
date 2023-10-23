@@ -15,9 +15,11 @@ const postSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
-    imageID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Image"
+    image: {
+        type: String,
+        required: [true, 'Image is required.'],
+        trim: true,
+        lowercase: true
     },
     date: {
         type: Date,
