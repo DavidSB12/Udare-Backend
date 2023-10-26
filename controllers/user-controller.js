@@ -51,6 +51,26 @@ const addUser = async (req,res) => {
         console.error('Error adding a new user:', error);
         res.status(500).json({ error: 'Error adding a new user' });
       }
+
+      const uid = newUser._id;
+
+      singleUpload(req, res, function(err) {
+        if (err) {
+            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message, error : err}] });
+        }
+        // console.log(req.file);
+
+        let update = {image: req.file.location};
+
+        User.findByIdAndUpdate(uid, update, {new: true})
+            .then(user => {
+                res.status(200).json({message: 'Image uploaded successfully.', user});
+            })
+            .catch(err => {
+                res.status(500).json({message: 'Error uploading image.', error: err.message});
+            });
+
+    });
 }
 
 const updateUserById = async (req, res) => {
