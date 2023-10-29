@@ -48,6 +48,26 @@ const addPost = async (req,res) => {
         console.error('Error adding a new post:', error);
         res.status(500).json({ error: 'Error adding a new post' });
       }
+
+      const uid = newPost._id;
+
+      singleUpload(req, res, function(err) {
+        if (err) {
+            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message, error : err}] });
+        }
+        // console.log(req.file);
+
+        let update = {image: req.file.location};
+
+        Post.findByIdAndUpdate(uid, update, {new: true})
+        .then((result) => {
+            res.status(200).json(result);
+        })
+        .catch((err) => {
+            res.status(500).json({error: err.message});
+        });
+
+    });
 }
 
 const updatePost = async (req, res) => {
@@ -96,7 +116,7 @@ const uploadImage = async (req, res) => {
         }
         // console.log(req.file);
 
-        let update = {image: req.file.location};
+        let update = {'image': req.file.location};
 
         Post.findByIdAndUpdate(uid, update, {new: true})
         .then((result) => {
