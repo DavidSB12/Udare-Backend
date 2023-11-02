@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 // Import all the routes from the routes folder
 const challengeRoutes = require('./challenges/challengeRoutes.js');
 const userRoutes = require('./users/userRoutes.js');

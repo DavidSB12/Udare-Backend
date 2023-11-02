@@ -2,6 +2,8 @@ const Post = require('../model/Post.js');
 const ImageUpload = require('../services/ImageUpload.js');
 const singleUpload = ImageUpload.single("image");
 
+
+
 const getAllPosts = async (req, res) => {
     let posts;
     console.log("getAllPosts");
@@ -31,15 +33,17 @@ const getPostById = async (req, res) => {
 }
 
 const addPost = async (req,res) => {
-    const {title, description, image, user, challenge} = req.body;    
+    const post = JSON.parse(req.body.post)
+    const {userID, challengeID, caption, date} = post;    
+    const image = req.files.image[0].location;
 
     try {
-        const newPost = new Post({
-          title,
-          description,
-          image,
-          user,
-          challenge,
+        let newPost = new Post({
+          userID,
+          challengeID,
+          caption,
+          date,
+          image
         });
         await newPost.save();
         res.status(201).json(newPost);
@@ -48,39 +52,13 @@ const addPost = async (req,res) => {
         console.error('Error adding a new post:', error);
         res.status(500).json({ error: 'Error adding a new post' });
       }
-
-      const uid = newPost._id;
-
-      singleUpload(req, res, function(err) {
-        if (err) {
-            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message, error : err}] });
-        }
-        // console.log(req.file);
-
-        let update = {image: req.file.location};
-
-        Post.findByIdAndUpdate(uid, update, {new: true})
-        .then((result) => {
-            res.status(200).json(result);
-        })
-        .catch((err) => {
-            res.status(500).json({error: err.message});
-        });
-
-    });
 }
 
 const updatePost = async (req, res) => {
     const postId = req.params.id;
-    const {title, description, image, user, challenge} = req.body;
+    const updatedPostData = req.body;    
     try {
-      const updatedPost = await Post.findByIdAndUpdate(postId, {
-        title,
-        description,
-        image,
-        user,
-        challenge,
-      });
+      const updatedPost = await Post.findByIdAndUpdate(postId, updatedPostData);
       if (!updatedPost) {
         return res.status(404).json({ message: 'Post not found.' });
       }
@@ -109,14 +87,13 @@ const deletePost = async (req, res) => {
 
 const uploadImage = async (req, res) => {
     const uid = req.params.id;
-
+    console.log(req.files)
     singleUpload(req, res, function(err) {
         if (err) {
             return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message, error : err}] });
         }
-        // console.log(req.file);
 
-        let update = {'image': req.file.location};
+        let update = {"image": req.file.location};
 
         Post.findByIdAndUpdate(uid, update, {new: true})
         .then((result) => {
