@@ -51,26 +51,6 @@ const addUser = async (req,res) => {
         console.error('Error adding a new user:', error);
         res.status(500).json({ error: 'Error adding a new user' });
       }
-
-      const uid = newUser._id;
-
-      singleUpload(req, res, function(err) {
-        if (err) {
-            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message, error : err}] });
-        }
-        // console.log(req.file);
-
-        let update = {image: req.file.location};
-
-        User.findByIdAndUpdate(uid, update, {new: true})
-            .then(user => {
-                res.status(200).json({message: 'Image uploaded successfully.', user});
-            })
-            .catch(err => {
-                res.status(500).json({message: 'Error uploading image.', error: err.message});
-            });
-
-    });
 }
 
 const updateUserById = async (req, res) => {
@@ -118,32 +98,102 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
-const uploadImage = async (req, res) => {
-    singleUpload(req, res, function(err) {
-        if (err) {
-            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message}]});
-        }
-        let update = { 'profile.profilePic': req.file.location};
+const getFollowingOfUser = async (req, res) => {
+  const userId = req.params.id;
 
+  try {
+    const user = await User.findById(userId).populate('profile.following', null, 'User');
 
-        // User.findByIdAndUpdate(req.params.id, profile, {new: true})
-        //     .then(user => {
-        //         res.status(200).json({message: 'Image uploaded successfully.', user});
-        //     })
-        //     .catch(err => {
-        //         res.status(500).json({message: 'Error uploading image.', error: err.message});
-        //     });
-        
-        User.findByIdAndUpdate(req.params.id, update, {new: true})
-            .then(user => {
-                res.status(200).json({message: 'Image uploaded successfully.', user});
-            })
-            .catch(err => {
-                res.status(500).json({message: 'Error uploading image.', error: err.message});
-            });
-    });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const friends = user.profile.following;
+    res.status(200).json(friends);
+  } catch (error) {
+    console.error('Error retrieving following of user:', error);
+    res.status(500).json({ error: 'Error retrieving friends of user.' });
+  }
 }
 
+const getFollowersOfUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId).populate('profile.followers', null, 'User');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const friends = user.profile.followers;
+    res.status(200).json(friends);
+  } catch (error) {
+    console.error('Error retrieving followers of user:', error);
+    res.status(500).json({ error: 'Error retrieving friends of user.' });
+  }
+}
+
+
+
+const followUser = async (req, res) => {
+  const userId = req.params.id;
+  const userToFollowId = req.body._id;
+
+  try {
+    const user = await User.findById(userId);
+    const userToFollow = await User.findById(userToFollowId);
+
+
+    if (!user || !userToFollowId) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    if (user.profile.following.includes(userToFollowId)) {
+      return res.status(400).json({ message: 'You are already following this user.' });
+    }
+
+    user.profile.following.push(userToFollowId);
+    userToFollow.profile.followers.push(userId);
+
+    await user.save();
+    await userToFollow.save();
+
+    res.status(200).json({ message: 'User followed successfully.' });
+  } catch (error) {
+    console.error('Error following user:', error);
+    res.status(500).json({ error: 'Error following user.' });
+  }
+};
+
+const unfollowUser = async (req, res) => {
+  const userId = req.params.id;
+  const userToUnfollowId = req.body._id;
+
+  try {
+    const user = await User.findById(userId);
+    const userToUnfollow = await User.findById(userToUnfollowId);
+
+    if (!user || !userToUnfollow) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    if (!user.profile.following.includes(userToUnfollowId)) {
+      return res.status(400).json({ message: 'You are not following this user.' });
+    }
+
+    user.profile.following.pull(userToUnfollowId);
+    userToUnfollow.profile.followers.pull(userId);
+
+    await user.save();
+    await userToUnfollow.save();
+
+    res.status(200).json({ message: 'User unfollowed successfully.' });
+  } catch (error) {
+    console.error('Error unfollowing user:', error);
+    res.status(500).json({ error: 'Error unfollowing user.' });
+  }
+};
 
 
 
@@ -153,5 +203,9 @@ module.exports = {
     getUserById,
     getAllUsers,
     addUser,
-    uploadImage,
+    getFollowingOfUser,
+    getFollowersOfUser,
+    getFollowingOfUser,
+    followUser,
+    unfollowUser
 }
