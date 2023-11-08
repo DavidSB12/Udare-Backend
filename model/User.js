@@ -50,6 +50,26 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         }],
+        pointsSport: {
+            type: Number,
+            default: 0,
+        },
+        pointsSocial: {
+            type: Number,
+            default: 0,
+        },
+        pointsCulture: {
+            type: Number,
+            default: 0,
+        },
+        pointsPersonalGrowth: {
+            type: Number,
+            default: 0
+        },
+        pointsNutrition: {
+            type: Number,
+            default: 0
+        }
     }
          
     
