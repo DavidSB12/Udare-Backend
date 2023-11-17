@@ -35,7 +35,9 @@ const getUserById = async (req, res) => {
 
 
 const addUser = async (req,res) => {
-    const {username, password, email, profile} = req.body;    
+  // Log de req.body
+  console.log(req.body);
+    const {username, password, email, profile, uid} = req.body;    
 
     try {
         const newUser = new User({
@@ -43,6 +45,7 @@ const addUser = async (req,res) => {
           password,
           email,
           profile,
+          uid
         });
         await newUser.save();
         res.status(201).json(newUser);
@@ -73,6 +76,8 @@ const updateUserByIdImage = async (req,res) => {
     res.status(500).json({ error: 'Error updating user by ID.' });
   }
 }
+
+
 
 const updateUserById = async (req, res) => {
     const userId = req.params.id;
