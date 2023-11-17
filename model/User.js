@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 6
     },
+    uid: {
+        type: String,
+        required: [true, 'UID is required.'],
+        unique: true,
+        trim: true,
+    },
     email: {
         type: String,
         required: [true, 'Email is required.'],

@@ -35,7 +35,9 @@ const getUserById = async (req, res) => {
 
 
 const addUser = async (req,res) => {
-    const {username, password, email, profile} = req.body;    
+  // Log de req.body
+  console.log(req.body);
+    const {username, password, email, profile, uid} = req.body;    
 
     try {
         const newUser = new User({
@@ -43,6 +45,7 @@ const addUser = async (req,res) => {
           password,
           email,
           profile,
+          uid
         });
         await newUser.save();
         res.status(201).json(newUser);
@@ -69,6 +72,31 @@ const updateUserById = async (req, res) => {
       res.status(500).json({ error: 'Error updating user by ID.' });
     }
 }
+
+// Update User Profile Picture
+const updateUserProfilePicture = async (req, res) => {
+  const userId = req.params.id;
+  const updatedUserData = req.body;
+
+  singleUpload(req, res, async (err) => {
+    if (err) {
+      return res.status(422).json({ message: 'Error uploading file.' });
+    }
+
+    let update = { profilePic: req.file.location };
+
+    Post.findByIdAndUpdate(userId, update, { new: true })
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
+  });
+};
+
+  
+
 
 const deleteUserById = async (req, res) => {
     const userId = req.params.id;
@@ -207,5 +235,6 @@ module.exports = {
     getFollowersOfUser,
     getFollowingOfUser,
     followUser,
-    unfollowUser
+    unfollowUser,
+    updateUserProfilePicture,
 }
