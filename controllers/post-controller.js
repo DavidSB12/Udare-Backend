@@ -43,7 +43,8 @@ const addPost = async (req,res) => {
           challengeID,
           caption,
           date,
-          image
+          image,
+          comments
         });
         await newPost.save();
         res.status(201).json(newPost);
@@ -107,12 +108,44 @@ const uploadImage = async (req, res) => {
 
 }
 
+const addComment = async (req, res) => {
+  const postId = req.params.id;
+  const { userId, comment } = req.body;
+
+  try {
+      // Buscar el post por ID
+      const post = await Post.findById(postId);
+
+      if (!post) {
+          return res.status(404).json({ message: 'Post not found.' });
+      }
+
+      // Crear un nuevo comentario
+      const nuevoComentario = {
+          userId: userId,
+          comment: comment
+      };
+
+      // Agregar el nuevo comentario a la lista de comentarios del post
+      post.comments.push(nuevoComentario);
+
+      // Guardar el post actualizado
+      const postActualizado = await post.save();
+
+      res.status(200).json(postActualizado);
+  } catch (error) {
+      console.error('Error añadiendo comment to post:', error);
+      res.status(500).json({ error: 'Error adding comment to post.' });
+  }
+};
+
 module.exports = {
     getAllPosts,
     getPostById,
     addPost,
     updatePost,
     deletePost,
-    uploadImage
+    uploadImage,
+    addComment
 }
 
