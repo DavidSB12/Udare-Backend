@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {getAllUsers, getUserById, updateUserById, deleteUserById, addUser, getFollowingOfUser,getFollowersOfUser, followUser, unfollowUser, updateUserByIdImage} = require("../../controllers/user-controller.js")
+const ImageUpload = require('../../services/ImageUpload');
 
 
 router.get("/", getAllUsers);
