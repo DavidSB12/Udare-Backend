@@ -53,6 +53,27 @@ const addUser = async (req,res) => {
       }
 }
 
+const updateUserByIdImage = async (req,res) => {
+  const userId = req.params.id;
+  //const updatedUser = JSON.parse(req.body.user)
+  const updatedUser = req.body;
+  const image = req.files.image[0].location;
+  updatedUser.image = image;
+  
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedUser, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    res.status(200).json(updatedUser);
+  } 
+  catch (error) {
+    console.error('Error updating user by ID:', error);
+    res.status(500).json({ error: 'Error updating user by ID.' });
+  }
+}
+
 const updateUserById = async (req, res) => {
     const userId = req.params.id;
     const updatedUserData = req.body;
@@ -207,5 +228,6 @@ module.exports = {
     getFollowersOfUser,
     getFollowingOfUser,
     followUser,
-    unfollowUser
+    unfollowUser,
+    updateUserByIdImage
 }
