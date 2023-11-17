@@ -23,7 +23,11 @@ const postSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    comments: [{ 
+        userID: String, 
+        comment: String 
+    }]
 });
 
 const Post = mongoose.model('Post', postSchema);

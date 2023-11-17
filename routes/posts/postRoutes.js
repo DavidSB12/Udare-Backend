@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ImageUpload = require('../../services/ImageUpload');
 
-const {getAllPosts, getPostById, addPost, updatePost, deletePost, uploadImage} = require('../../controllers/post-controller.js');
+const {getAllPosts, getPostById, addPost, updatePost, deletePost, uploadImage, addComment} = require('../../controllers/post-controller.js');
 
 router.get('/', getAllPosts);
 router.get('/:id', getPostById);
@@ -10,6 +10,7 @@ router.post('/add', ImageUpload.fields([{ name: 'image', maxCount: 1 }, { name: 
 router.put('/:id', updatePost);
 router.delete('/:id', deletePost);
 router.post('/:id/upload', uploadImage);
+router.post('/:id/addComment', addComment)
 
 
 
