@@ -25,7 +25,7 @@ const postSchema = new mongoose.Schema({
         default: Date.now
     },
     comments: [{ 
-        userID: String, 
+        userId: String, 
         comment: String 
     }]
 });
