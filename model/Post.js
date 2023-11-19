@@ -27,7 +27,11 @@ const postSchema = new mongoose.Schema({
     comments: [{ 
         userID: String, 
         comment: String 
-    }]
+    }],
+    reactions: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reaction"
+    }],
 });
 
 const Post = mongoose.model('Post', postSchema);
