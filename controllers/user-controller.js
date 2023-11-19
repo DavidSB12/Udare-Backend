@@ -58,13 +58,15 @@ const addUser = async (req,res) => {
 
 const updateUserByIdImage = async (req,res) => {
   const userId = req.params.id;
-  const updatedUser = JSON.parse(req.body.user)
+  const updatedUserData = JSON.parse(req.body.user)
   //const updatedUser = req.body;
   const image = req.files.image[0].location;
-  updatedUser.image = image;
+  console.log(req.files);
+  updatedUserData.profile.profilePic = image;
+  
   
   try {
-    const updatedUser = await User.findByIdAndUpdate(userId, updatedUser, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, { new: true });
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found.' });
     }
