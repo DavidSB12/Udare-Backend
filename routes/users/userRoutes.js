@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getAllUsers, getUserById, updateUserById, deleteUserById, addUser, getFollowingOfUser,getFollowersOfUser, followUser, unfollowUser, updateUserByIdImage} = require("../../controllers/user-controller.js")
+const {getAllUsers, getUserById, updateUserById, deleteUserById, getUserByUid, addUser, getFollowingOfUser,getFollowersOfUser, followUser, unfollowUser, updateUserByIdImage} = require("../../controllers/user-controller.js")
 const ImageUpload = require('../../services/ImageUpload');
 
 
@@ -14,6 +14,7 @@ router.get("/:id/getFollowingOfUser", getFollowingOfUser)
 router.get("/:id/getFollowersOfUser", getFollowersOfUser)
 router.post("/:id/followUser", followUser); 
 router.post("/:id/unfollowUser", unfollowUser);
+router.get("/getUserByUid/:uid", getUserByUid);
 
 
 module.exports = router;
