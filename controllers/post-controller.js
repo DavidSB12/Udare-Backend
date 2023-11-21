@@ -33,8 +33,9 @@ const getPostById = async (req, res) => {
 }
 
 const addPost = async (req,res) => {
+  console.log("a");
     const post = JSON.parse(req.body.post)
-    const {userID, challengeID, caption, date} = post;    
+    const {userID, challengeID, caption, date, comments} = post;    
     const image = req.files.image[0].location;
 
     try {
