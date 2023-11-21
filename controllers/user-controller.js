@@ -43,9 +43,9 @@ const addUser = async (req,res) => {
         const newUser = new User({
           username,
           password,
+          uid,
           email,
-          profile,
-          uid
+          profile
         });
         await newUser.save();
         res.status(201).json(newUser);
