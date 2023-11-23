@@ -6,20 +6,14 @@ const reactionSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    post : {
+    postId : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post',
         required: true,
     },
-
-    type: {
+    imageURL: {
         type: String,
-        enum: ['like', 'dislike', 'love', 'haha', 'wow', 'sad', 'angry'],
-        required: true,
-    },
-    emoji: {
-        type: String,
-        required: true,
+        default: "",
     },
     createdAt: {
         type: Date,
