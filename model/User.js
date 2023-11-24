@@ -68,11 +68,11 @@ const userSchema = new mongoose.Schema({
             type: Number,
             default: 0,
         },
-        pointsPersonalGrowth: {
+        pointsGrowth: {
             type: Number,
             default: 0
         },
-        pointsNutrition: {
+        pointsCooking: {
             type: Number,
             default: 0
         }
