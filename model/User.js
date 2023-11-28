@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
         },
         profilePic: {
             type: String,
-            default: 'Unspecified' 
+            default: 'https://testudare.s3.eu-west-3.amazonaws.com/faceless-businessman-user-profile-icon-business-leader-profile-picture-portrait-user-member-people-icon-in-flat-style-circle-button-with-avatar-photo-silhouette-free-png.png' 
         },
         followers: [{
             type: mongoose.Schema.Types.ObjectId,
