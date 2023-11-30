@@ -28,7 +28,7 @@ const getUserById = async (req, res) => {
       res.status(200).json(user);
     } 
     catch (error) {
-      console.error('Error getting user by ID:', error);
+      //console.error('Error getting user by ID:', error);
       res.status(500).json({ error: 'Error retrieving user by ID.' });
     }
 }
@@ -50,9 +50,7 @@ const getUserByUid = async (req, res) => {
 }
 
 
-const addUser = async (req,res) => {
-  // Log de req.body
-  console.log(req.body);
+const addUser = async (req,res) => {  
     const {username, password, email, profile, uid} = req.body;    
 
     try {
