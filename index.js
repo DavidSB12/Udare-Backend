@@ -27,3 +27,11 @@ app.get("/test", (req, res) => {
 
 // start server
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+
+module.exports = {
+    app,
+    startServer: (port) => {
+      return app.listen(port, () => console.log(`Listening on port ${port}`));
+    }
+  };
