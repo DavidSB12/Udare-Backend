@@ -53,7 +53,7 @@ describe('User API Tests', () => {
   });
 
   it('should delete a post by ID', async () => {
-    const postId = '6560b7693aa3ffc06c2eae83'; // Reemplaza con un ID real
+    const postId = '656092c1b1098b21a1d168d2'; // Reemplaza con un ID real
     post = await Post.findById(postId);
 
     const response1 = await supertest(app)

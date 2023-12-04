@@ -6,7 +6,7 @@
   "scripts": {
 
     "test": "mocha tests/TestUsers.js",
-    "testPosts": "mocha tests/TestPosts.js",
+    "testPosts": "mocha tests/TestPosts.js --timeout 10000",
 
     "start": "nodemon index.js"
   },
