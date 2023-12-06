@@ -238,6 +238,35 @@ const unfollowUser = async (req, res) => {
   }
 };
 
+const getNotFollowingUsers = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    // Obtener los usuarios que sigue el usuario especificado
+    const user = await User.findById(userId).populate('profile.following');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Obtener todos los usuarios
+    const allUsers = await User.find();
+
+    // Obtener los IDs de los usuarios seguidos
+    const followingIds = user.profile.following.map(followedUser => followedUser._id.toString());
+
+    // Filtrar los usuarios que no están en la lista de seguidos
+    const notFollowingUsers = allUsers.filter(user => !followingIds.includes(user._id.toString()) && user._id.toString() !== userId);
+
+    res.status(200).json(notFollowingUsers);
+  } catch (error) {
+    console.error('Error retrieving users not followed by user:', error);
+    res.status(500).json({ error: 'Error retrieving users not followed by user.' });
+  }
+}
+
+
+
 
 
 module.exports = {
@@ -252,5 +281,6 @@ module.exports = {
     followUser,
     unfollowUser,
     updateUserByIdImage,
-    getUserByUid
+    getUserByUid,
+    getNotFollowingUsers
 }
