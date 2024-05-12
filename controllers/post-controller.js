@@ -1,4 +1,5 @@
 const Post = require('../model/Post.js');
+const User = require("../model/User.js");
 const ImageUpload = require('../services/ImageUpload.js');
 const singleUpload = ImageUpload.single("image");
 
@@ -19,8 +20,7 @@ const getAllPosts = async (req, res) => {
 
 const getFirstPosts = async (req, res) => {
   try {
-      let { lastPostDate } = req.query; 
-      console.log("lastPostDate: "+lastPostDate)
+      let { lastPostDate } = req.query;       
     
       let query = lastPostDate ? { date: { $lt: new Date(lastPostDate) } } : {};
       
@@ -31,6 +31,28 @@ const getFirstPosts = async (req, res) => {
       
       return res.status(200).json(posts);
   } catch(err) {      
+      res.status(500).json({ message: err.message });
+  }
+}
+
+const getFriendsPosts = async (req, res) => {
+  let user;
+  const userId = req.params.userId;
+  try {
+      user = await User.findById(userId).populate('profile.following');  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    const followingUserIds = user.profile.following.map(friend => friend._id);
+    console.log(followingUserIds)
+    
+    const posts = await Post.find({ userID: { $in: followingUserIds } })
+                          .sort({ date: -1 })   
+
+    return res.status(200).json(posts);   
+  }
+  catch(err) {      
       res.status(500).json({ message: err.message });
   }
 }
@@ -166,6 +188,7 @@ module.exports = {
     deletePost,
     uploadImage,
     addComment,
-    getFirstPosts
+    getFirstPosts,
+    getFriendsPosts
 }
 
