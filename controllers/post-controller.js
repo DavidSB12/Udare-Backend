@@ -12,9 +12,27 @@ const getAllPosts = async (req, res) => {
         // console.log(posts);
         return res.status(200).json(posts);
     }
-    catch(err) {
+    catch(err) {      
         res.status(500).json({ message: err.message });
     }
+}
+
+const getFirstPosts = async (req, res) => {
+  try {
+      let { lastPostDate } = req.query; 
+      console.log("lastPostDate: "+lastPostDate)
+    
+      let query = lastPostDate ? { date: { $lt: new Date(lastPostDate) } } : {};
+      
+      // Buscar los 6 posts más recientes ordenados por fecha de creación descendente
+      let posts = await Post.find(query)
+                          .sort({ date: -1 })
+                          .limit(6);
+      
+      return res.status(200).json(posts);
+  } catch(err) {      
+      res.status(500).json({ message: err.message });
+  }
 }
 
 const getPostById = async (req, res) => {
@@ -147,6 +165,7 @@ module.exports = {
     updatePost,
     deletePost,
     uploadImage,
-    addComment
+    addComment,
+    getFirstPosts
 }
 

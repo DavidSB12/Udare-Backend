@@ -15,6 +15,8 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+//desde cualquier dominio podemos hacer solicitudes al backend 
 app.use(cors());
 
 // routes
