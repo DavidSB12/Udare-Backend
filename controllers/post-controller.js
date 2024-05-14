@@ -48,7 +48,7 @@ const getFriendsPosts = async (req, res) => {
     console.log(followingUserIds)
     
     const posts = await Post.find({ userID: { $in: followingUserIds } })
-                          .sort({ date: -1 })   
+                            .sort({ date: -1 })   
 
     return res.status(200).json(posts);   
   }
