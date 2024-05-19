@@ -1,18 +1,11 @@
-const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const dotenv = require('dotenv');
 dotenv.config();
 const { S3Client } = require('@aws-sdk/client-s3');
 
-// // const s3 = new aws.S3();
+                        
 
-
-// aws.config.update({
-//     secretAccessKey: process.env.AWS_SECRET_KEY_ID,
-//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//     region: 'eu-west-3'
-//     });
 
 let s3 = new S3Client({
     region: 'eu-west-3',

@@ -6,6 +6,9 @@ const { connect, close } = require('./db/db.js');
 const routes = require('./routes/routes.js');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require("multer")
+const {uploadImage} = require("./services/imageUploadNew.js")
+
 
 // connect to database
 connect()
@@ -18,6 +21,17 @@ app.use(express.json());
 
 //desde cualquier dominio podemos hacer solicitudes al backend 
 app.use(cors());
+
+
+
+
+
+//store the images in memory
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
+
+//app.get("/uploadTest", upload.single("image"), uploadImage);
 
 // routes
 app.use('/', routes);
