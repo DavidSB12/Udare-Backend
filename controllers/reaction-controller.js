@@ -34,9 +34,10 @@ const addReaction = async (req, res) => {
   console.log("add image");
   const reaction = JSON.parse(req.body.reaction); 
   const { userId, postId } = reaction;
+  console.log("userId: "+userId)
 
-  const url = await uploadImageService(req.files.image[0]);
-  console.log("URL: " + url);
+  const imageURL = await uploadImageService(req.files.image[0]);
+  console.log("URL: " + imageURL);
 
   let newId;
 
@@ -44,7 +45,7 @@ const addReaction = async (req, res) => {
     let newReaction = new Reaction({
       userId,
       postId,
-      url,
+      imageURL,
     });
     await newReaction.save();
     newId = newReaction._id;
@@ -53,7 +54,6 @@ const addReaction = async (req, res) => {
     console.error("Error adding a new reaction:", error);
     res.status(500).json({ error: "Error adding a new reaction" });
   }
-
   // Update post reactions
   try {
     const post = await Post.findById(postId);

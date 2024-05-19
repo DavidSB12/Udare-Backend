@@ -15,8 +15,8 @@ router.get("/getTopUsersFriends/:userId", getTopUsersFriends);
 router.get("/:id", getUserById);
 router.post("/add", addUser);
 router.put("/:id", updateUserById);
-router.put("/updateImage/:id",ImageUpload.fields([{ name: 'image', maxCount: 1 }, { name: 'user', maxCount: 1 }]) ,updateUserByIdImage);
-router.put("/updateImageNew/:id",upload.fields([{ name: 'image', maxCount: 1 }, { name: 'user', maxCount: 1 }]) ,updateUserByIdImageNew);
+router.put("/updateImageOld/:id",ImageUpload.fields([{ name: 'image', maxCount: 1 }, { name: 'user', maxCount: 1 }]) ,updateUserByIdImage);
+router.put("/updateImage/:id",upload.fields([{ name: 'image', maxCount: 1 }, { name: 'user', maxCount: 1 }]) ,updateUserByIdImageNew);
 router.delete("/:id", deleteUserById);
 router.get("/:id/getFollowingOfUser", getFollowingOfUser)
 router.get("/:id/getFollowersOfUser", getFollowersOfUser)
