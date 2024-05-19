@@ -1,6 +1,4 @@
 const  Challenge  = require('../model/Challenge');
-const { ObjectId } = require('mongodb');
-
 
 const getDailyChallenges = async (req, res) => {     
     let randomChallenges; 

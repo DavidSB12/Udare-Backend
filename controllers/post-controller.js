@@ -1,8 +1,6 @@
 const Post = require('../model/Post.js');
 const User = require("../model/User.js");
-const ImageUpload = require('../services/ImageUpload.js');
 const {uploadImageService} = require('../services/imageUploadNew.js');
-const singleUpload = ImageUpload.single("image");
 
 
 
@@ -72,33 +70,7 @@ const getPostById = async (req, res) => {
       res.status(500).json({ error: 'Error retrieving post by ID.' });
     }
 }
-
 const addPost = async (req,res) => {   
-    console.log("addPost");    
-    console.log(req.body.post)
-    const post = JSON.parse(req.body.post)
-    const {userID, challengeID, caption, date, comments} = post;    
-    const image = req.files.image[0].location;
-
-    try {
-        let newPost = new Post({
-          userID,
-          challengeID,
-          caption,
-          date,
-          image,
-          comments
-        });
-        await newPost.save();
-        res.status(201).json(newPost);
-      } 
-      catch (error) {
-        console.error('Error adding a new post:', error);
-        res.status(500).json({ error: 'Error adding a new post' });
-      }
-}
-
-const newAddPost = async (req,res) => {   
   console.log("newAddPost"); 
   console.log(req.files.image[0]);      
   const url = await uploadImageService(req.files.image[0]);
@@ -218,7 +190,6 @@ module.exports = {
     uploadImage,
     addComment,
     getFirstPosts,
-    getFriendsPosts,
-    newAddPost
+    getFriendsPosts    
 }
 

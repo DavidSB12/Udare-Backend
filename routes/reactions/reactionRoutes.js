@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require("multer")
 const router = express.Router();
 const {getAllReactions, getReactionById, addReaction, updateReaction, uploadImage, getReactionsByPostId, addReactionWithoutImage} = require("../../controllers/reaction-controller.js")
-const ImageUpload = require('../../services/ImageUpload');
 
 //store the images in memory
 const storage = multer.memoryStorage()

@@ -1,6 +1,4 @@
 const Reaction = require("../model/Reaction");
-const ImageUpload = require("../services/ImageUpload.js");
-const singleUpload = ImageUpload.single("image");
 const Post = require("../model/Post.js");
 const { uploadImageService } = require("../services/imageUploadNew.js");
 

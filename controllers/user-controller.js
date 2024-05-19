@@ -1,7 +1,4 @@
 const User = require("../model/User.js");
-const { ObjectId } = require("mongodb");
-const ImageUpload = require("../services/ImageUpload.js");
-const singleUpload = ImageUpload.single("image");
 const {uploadImageService} = require('../services/imageUploadNew.js');
 
 
@@ -67,27 +64,6 @@ const addUser = async (req, res) => {
 };
 
 const updateUserByIdImage = async (req, res) => {
-  const userId = req.params.id;
-  const updatedUserData = JSON.parse(req.body.user);
-  const image = req.files.image[0].location;
-  console.log(req.files);
-  updatedUserData.profile.profilePic = image;
-
-  try {
-    const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
-      new: true,
-    });
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found." });
-    }
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error("Error updating user by ID:", error);
-    res.status(500).json({ error: "Error updating user by ID." });
-  }
-};
-
-const updateUserByIdImageNew = async (req, res) => {
   const userId = req.params.id;
   console.log(userId);
   console.log(req.body.user)
@@ -381,6 +357,5 @@ module.exports = {
   getUserByUid,
   getNotFollowingUsers,
   getTopUsers,
-  getTopUsersFriends,
-  updateUserByIdImageNew
+  getTopUsersFriends
 };
