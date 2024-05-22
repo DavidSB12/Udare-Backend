@@ -25,11 +25,14 @@ const getFollowersOfUser = async (req, res) => {
 
 const followUser = async (req, res) => {
   const userId = req.params.id;
-  const userToFollowId = req.body._id;
+  const userToFollowId = req.body._id;  
 
   try {
-    const user = await userRepository.findById(userId);
-    const userToFollow = await userRepository.findById(userToFollowId);
+    const user = await userRepository.getUserById(userId);
+    const userToFollow = await userRepository.getUserById(userToFollowId);
+    console.log("Follow------");
+    console.log(user)
+    console.log(userToFollow)
 
     if (!user || !userToFollowId) {
       return res.status(404).json({ message: "User not found." });
@@ -59,8 +62,8 @@ const unfollowUser = async (req, res) => {
   const userToUnfollowId = req.body._id;
 
   try {
-    const user = await userRepository.findById(userId);
-    const userToUnfollow = await userRepository.findById(userToUnfollowId);
+    const user = await userRepository.getUserById(userId);
+    const userToUnfollow = await userRepository.getUserById(userToUnfollowId);
 
     if (!user || !userToUnfollow) {
       return res.status(404).json({ message: "User not found." });
