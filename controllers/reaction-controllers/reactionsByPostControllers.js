@@ -8,7 +8,6 @@ const getReactionsByPostId = async (req,res) => {
   const postId = req.params.id  
   try {
     const reactions = await reactionRepository.getReactionsByPostId(postId);
-    console.log(reactions)
     return res.status(200).json(reactions);
   } catch (error) {
     console.error("Error getting reactions by post ID:", error);

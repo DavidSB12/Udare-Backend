@@ -1,9 +1,10 @@
 const  Challenge  = require('../../model/Challenge');
+const challengeRepository = require("./../../repositories/challenge-repository")
 
 const getChallengeById = async (req, res) => {
     const challengeId = req.params.id;
     try {
-      const challenge = await Challenge.findById(challengeId);
+      const challenge = await challengeRepository.getChallengeById(challengeId);
       if (!challenge) {
         return res.status(404).json({ message: 'Challenge not found.' });
       }
@@ -20,11 +21,11 @@ const updatedChallengeById = async (req, res) => {
     const updatedChallengeData = req.body;
   
     try {
-      const updatedChallenge = await Challenge.findByIdAndUpdate(challengeID, updatedChallengeData, { new: true });
+      const updatedChallenge = await challengeRepository.updateChallengeById(challengeID, updatedChallengeData, { new: true });
       if (!updatedChallenge) {
         return res.status(404).json({ message: 'Challenge not found.' });
       }
-      res.status(200).json(updatedChallenge);
+      res.status(201).json(updatedChallenge);
     } 
     catch (error) {
       console.error('Error updating challenge by ID:', error);
@@ -37,7 +38,7 @@ const deleteChallengeById = async (req, res) => {
     const challengeId = req.params.id;
   
     try {
-      const deletedChallenge = await Challenge.findByIdAndRemove(challengeId);
+      const deletedChallenge = await challengeRepository.deleteChallengeById(challengeId);
   
       if (!deletedChallenge) {
         return res.status(404).json({ message: 'Challenge not found.' });
@@ -59,7 +60,7 @@ const addChallenge = async (req, res) => {
         description,
         category,
         });
-        await newChallenge.save();
+        await challengeRepository.addChallenge(newChallenge);
         res.status(201).json(newChallenge);
     } 
     catch (error) {
@@ -71,7 +72,7 @@ const addChallenge = async (req, res) => {
 const getAllChallenges = async (req, res) => {  
     let challenges;
     try {
-        challenges = await Challenge.find();
+        challenges = await challengeRepository.getAllChallenges();
         return res.status(200).json(challenges);
     }
     catch(err) {

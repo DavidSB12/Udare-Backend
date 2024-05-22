@@ -1,4 +1,6 @@
 const postRepository = require('../../repositories/post-repository.js');
+const userRepository = require('../../repositories/user-repository.js');
+
 const {uploadImageService} = require('../../services/awsConnectionService.js');
 const Post = require("../../model/Post");
 
@@ -47,7 +49,12 @@ const addPost = async (req,res) => {
       image,
       comments
     });
-    await postRepository.addPost(newPost);
+    newPost = await postRepository.addPost(newPost);
+
+    //update user    
+    let user = await userRepository.getUserById(userID);
+    user.posts.push(newPost._id)
+    await userRepository.updateUserById(userID, user);
     res.status(201).json(newPost);
   } 
   catch (error) {
