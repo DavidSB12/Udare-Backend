@@ -55,13 +55,11 @@ const deleteReactionById = async (reactionId) => {
 const getReactionsByPostId = async (postId) => {
   try {
     const post = await Post.findById(postId);
-    console.log(post)
     if (!post) {
       throw new Error("Post not found.");
     }
     // Get the reactions by post ID
     const reactions = await Reaction.find({ postId: postId });
-    console.log(reactions)
     if (!reactions) {
       throw new Error("Reactions not found.");
     }

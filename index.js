@@ -7,9 +7,13 @@ const routes = require('./routes/routes.js');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require("multer")
+const cronService = require("./services/cronService.js")
 
 // connect to database
 connect()
+
+// set all crons
+cronService.configureCronJobs()
 
 // middleware
 app.use(bodyParser.json());

@@ -39,6 +39,7 @@ const getUserByUid = async (req, res) => {
 
 const addUser = async (req, res) => {
   const { username, password, email, profile, uid } = req.body;
+  profile.currentStreak = 0;
   try {
     const newUser = new User({
       username,

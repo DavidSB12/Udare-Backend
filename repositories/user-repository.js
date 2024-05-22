@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const Post = require("../model/Post");
 
 const getAllUsers = async () => {
   try {
@@ -62,17 +63,17 @@ const getTopUsers = async () => {
     const topUsers = await User.aggregate([
       {
         $addFields: {
-            totalPoints: {
-                $sum: [
-                    "$profile.pointsSport",
-                    "$profile.pointsSocial",
-                    "$profile.pointsCulture",
-                    "$profile.pointsGrowth",
-                    "$profile.pointsCooking"
-                ]
-            }
-        }
-    },
+          totalPoints: {
+            $sum: [
+              "$profile.pointsSport",
+              "$profile.pointsSocial",
+              "$profile.pointsCulture",
+              "$profile.pointsGrowth",
+              "$profile.pointsCooking",
+            ],
+          },
+        },
+      },
       {
         $sort: { totalPoints: -1 },
       },
@@ -87,50 +88,48 @@ const getTopUsers = async () => {
 };
 
 const getTopUserFriends = async (userId) => {
-  const user = await User.findById(userId).populate('profile.following');
-  console.log(user)
+  const user = await User.findById(userId).populate("profile.following");
 
   if (!user) {
     throw new Error("User not found");
   }
 
-  const friendIds = user.profile.following.map(friend => friend._id);
-  console.log(friendIds);
+  const friendIds = user.profile.following.map((friend) => friend._id);
 
   try {
     const topFriends = await User.aggregate([
       { $match: { _id: { $in: friendIds } } },
       {
         $addFields: {
-            totalPoints: {
-                $sum: [
-                    "$profile.pointsSport",
-                    "$profile.pointsSocial",
-                    "$profile.pointsCulture",
-                    "$profile.pointsGrowth",
-                    "$profile.pointsCooking"
-                ]
-            }
-        }
-    },
+          totalPoints: {
+            $sum: [
+              "$profile.pointsSport",
+              "$profile.pointsSocial",
+              "$profile.pointsCulture",
+              "$profile.pointsGrowth",
+              "$profile.pointsCooking",
+            ],
+          },
+        },
+      },
       { $sort: { totalPoints: -1 } },
-      { $limit: 10 } 
-  ]);    
+      { $limit: 10 },
+    ]);
     return topFriends;
   } catch (err) {
     throw new Error("Error retrieving top users");
   }
 };
 
-const getFollowingOfUser = async (userId) => {  
-  try {    
+const getFollowingOfUser = async (userId) => {
+  try {
     const user = await User.findById(userId).populate(
       "profile.following",
       null,
       "User"
     );
-    if (!user) throw new Error("User not found");   
-    console.log("user:" +user) 
+    if (!user) throw new Error("User not found");
+    console.log("user:" + user);
     const friends = user.profile.following;
     return friends;
   } catch (error) {
@@ -155,6 +154,29 @@ const getFollowersOfUser = async (userId) => {
   }
 };
 
+const updateDailyChallenge = async () => {
+  try {
+    await User.updateMany({}, { dailyChallengeCompleted: false });
+  } catch (err) {
+    throw new Error(
+      "Error changing the dailyChallengeCompleted atribute of all users: " +
+        err.message
+    );
+  }
+};
+
+const getLastDayPostsOfUser = async (user) => {
+  try {
+    const posts = await Post.find({ userID: user._id, date: { $gte: yesterday } });
+
+  } catch (err) {
+    throw new Error(
+      "Error changing the dailyChallengeCompleted atribute of all users: " +
+        err.message
+    );
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -165,5 +187,7 @@ module.exports = {
   getTopUsers,
   getFollowersOfUser,
   getFollowingOfUser,
-  getTopUserFriends
+  getTopUserFriends,
+  updateDailyChallenge,
+  getLastDayPostsOfUser
 };

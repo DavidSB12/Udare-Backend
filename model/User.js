@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
         },
         profilePic: {
             type: String,
-            default: 'https://testudare.s3.eu-west-3.amazonaws.com/faceless-businessman-user-profile-icon-business-leader-profile-picture-portrait-user-member-people-icon-in-flat-style-circle-button-with-avatar-photo-silhouette-free-png.png' 
+            default: 'https://udarebucket.s3.eu-north-1.amazonaws.com/profile-picture-default.png' 
         },
         followers: [{
             type: mongoose.Schema.Types.ObjectId,
@@ -75,10 +75,13 @@ const userSchema = new mongoose.Schema({
         pointsCooking: {
             type: Number,
             default: 0
+        },
+        currentStreak: {
+            type: Number,
+            deafult: 0
         }
     }
          
-    
 });
 
 

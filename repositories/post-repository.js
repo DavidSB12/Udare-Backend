@@ -81,6 +81,18 @@ const getFriendsPosts = async (userId) => {
   }
 };
 
+
+const getLatestPostOfUser = async (userId) => {
+  try {
+    let user = await User.findById(userId).populate("posts");
+    let sortedPosts = user.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    let latestPost = sortedPosts[0];
+    return latestPost;
+  } catch (err) {
+    throw new Error("Error retrieving the latest post: " + err.message);
+  }
+};
+
 module.exports = {
   addPost,
   deletePostById,
@@ -89,4 +101,5 @@ module.exports = {
   updatePostById,
   getFirstPosts,
   getFriendsPosts,
+  getLatestPostOfUser
 };

@@ -120,7 +120,6 @@ const getTopUsersFriends = async (req, res) => {
   const userId = req.params.userId;
   try {
     const topFriends = await userRepository.getTopUserFriends(userId);
-    console.log(topFriends)
     return res.status(200).json(topFriends);
   } catch (err) {
     console.error(err);
