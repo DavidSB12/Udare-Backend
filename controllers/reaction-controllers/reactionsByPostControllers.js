@@ -11,7 +11,7 @@ const getReactionsByPostId = async (req,res) => {
     return res.status(200).json(reactions);
   } catch (error) {
     console.error("Error getting reactions by post ID:", error);
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

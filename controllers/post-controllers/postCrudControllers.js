@@ -2,10 +2,12 @@ const postRepository = require("../../repositories/post-repository.js");
 const userRepository = require("../../repositories/user-repository.js");
 const challengeRepository = require("../../repositories/challenge-repository.js");
 
-const {
-  uploadImageService,
-} = require("../../services/awsConnectionService.js");
 const Post = require("../../model/Post");
+
+const ImageUploadServiceFactory = require('./../../services/imageUploadServiceFactory.js');
+const uploadImageService = ImageUploadServiceFactory.createUploadService('AWS');
+
+
 
 const getAllPosts = async (req, res) => {
   let posts;

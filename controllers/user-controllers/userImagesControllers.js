@@ -1,4 +1,6 @@
-const { uploadImageService } = require("../../services/awsConnectionService.js");
+const ImageUploadServiceFactory = require('./../../services/imageUploadServiceFactory.js');
+const uploadImageService = ImageUploadServiceFactory.createUploadService('AWS');
+
 const userRepository = require("../../repositories/user-repository.js");
 
 

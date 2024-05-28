@@ -1,8 +1,11 @@
 const Reaction = require("../../model/Reaction");
 const Post = require("../../model/Post.js");
-const { uploadImageService } = require("../../services/awsConnectionService.js");
+
 const reactionRepository = require('../../repositories/reaction-repository.js');
 const postRepository = require('../../repositories/post-repository.js');
+
+const ImageUploadServiceFactory = require('./../../services/imageUploadServiceFactory.js');
+const uploadImageService = ImageUploadServiceFactory.createUploadService('AWS');
 
 
 
