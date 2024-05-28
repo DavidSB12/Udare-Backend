@@ -95,6 +95,7 @@ const getTopUserFriends = async (userId) => {
   }
 
   const friendIds = user.profile.following.map((friend) => friend._id);
+  friendIds.push(user._id);
 
   try {
     const topFriends = await User.aggregate([
@@ -115,7 +116,9 @@ const getTopUserFriends = async (userId) => {
       { $sort: { totalPoints: -1 } },
       { $limit: 10 },
     ]);
+    console.log(topFriends)
     return topFriends;
+    
   } catch (err) {
     throw new Error("Error retrieving top users");
   }
