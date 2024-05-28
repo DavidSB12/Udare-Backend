@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 require('dotenv').config();
-const { connect, close } = require('./db/db.js');
+const Database = require('./db/db.js');
 const routes = require('./routes/routes.js');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -10,7 +10,8 @@ const multer = require("multer")
 const cronService = require("./services/cronService.js")
 
 // connect to database
-connect()
+const database = new Database()
+database.connect()
 
 // set all crons
 cronService.configureCronJobs()
