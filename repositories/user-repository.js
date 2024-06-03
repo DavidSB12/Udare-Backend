@@ -116,9 +116,8 @@ const getTopUserFriends = async (userId) => {
       { $sort: { totalPoints: -1 } },
       { $limit: 10 },
     ]);
-    console.log(topFriends)
+    console.log(topFriends);
     return topFriends;
-    
   } catch (err) {
     throw new Error("Error retrieving top users");
   }
@@ -170,8 +169,10 @@ const updateDailyChallenge = async () => {
 
 const getLastDayPostsOfUser = async (user) => {
   try {
-    const posts = await Post.find({ userID: user._id, date: { $gte: yesterday } });
-
+    const posts = await Post.find({
+      userID: user._id,
+      date: { $gte: yesterday },
+    });
   } catch (err) {
     throw new Error(
       "Error changing the dailyChallengeCompleted atribute of all users: " +
@@ -192,5 +193,5 @@ module.exports = {
   getFollowingOfUser,
   getTopUserFriends,
   updateDailyChallenge,
-  getLastDayPostsOfUser
+  getLastDayPostsOfUser,
 };

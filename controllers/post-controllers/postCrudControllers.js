@@ -4,10 +4,8 @@ const challengeRepository = require("../../repositories/challenge-repository.js"
 
 const Post = require("../../model/Post");
 
-const ImageUploadServiceFactory = require('./../../services/imageUploadServiceFactory.js');
-const uploadImageService = ImageUploadServiceFactory.createUploadService('AWS');
-
-
+const ImageUploadServiceFactory = require("./../../services/imageUploadServiceFactory.js");
+const uploadImageService = ImageUploadServiceFactory.createUploadService("AWS");
 
 const getAllPosts = async (req, res) => {
   let posts;
@@ -55,34 +53,34 @@ const addPost = async (req, res) => {
     let challenge = await challengeRepository.getChallengeById(challengeID);
     let user = await userRepository.getUserById(userID);
 
-
     switch (challenge.category) {
       case "cocina":
-        user.profile.pointsCooking += 100
+        user.profile.pointsCooking += 100;
         break;
 
       case "crecimientopersonal":
-        user.profile.pointsGrowth += 100
+        user.profile.pointsGrowth += 100;
         break;
 
       case "deportes":
-        user.profile.pointsSport += 100
+        user.profile.pointsSport += 100;
         break;
 
       case "social":
-        user.profile.pointsSocial += 100
+        user.profile.pointsSocial += 100;
         break;
 
       case "cultura":
-        user.profile.pointsCulture += 100
+        user.profile.pointsCulture += 100;
         break;
     }
-
 
     if (!user.dailyChallengeCompleted) {
       user.dailyChallengeCompleted = true;
       user.profile.currentStreak += 1;
     }
+
+    user = await updateRewards(user);
 
     user.posts.push(newPost._id);
     await userRepository.updateUserById(userID, user);
@@ -122,6 +120,44 @@ const deletePost = async (req, res) => {
   } catch (error) {
     console.error("Error deleting post:", error);
     res.status(500).json({ error: "Error deleting post." });
+  }
+};
+
+const updateRewards = async (user) => {
+  const rewardForPoints = [1000, 5000, 10000, 50000];
+  const rewardForStreak = [10, 20, 50, 100, 365];
+
+  try {
+    // Check for points milestones
+    const totalPoints =
+      user.profile.pointsSport +
+      user.profile.pointsSocial +
+      user.profile.pointsCulture +
+      user.profile.pointsGrowth +
+      user.profile.pointsCooking;
+
+    rewardForPoints.forEach((points) => {
+      if (
+        totalPoints >= points &&
+        !user.profile.pointsTrophies.includes(`points-${points}`)
+      ) {
+        user.profile.pointsTrophies.push(`points-${points}`);
+      }
+    });
+
+    // Check for streak milestones
+    rewardForStreak.forEach((streak) => {
+      if (
+        user.profile.currentStreak >= streak &&
+        !user.profile.streakTrophies.includes(`streak-${streak}`)
+      ) {
+        user.profile.streakTrophies.push(`streak-${streak}`);
+      }
+    });
+
+    return user;
+  } catch (error) {
+    console.error("Error updating rewards:", error);
   }
 };
 

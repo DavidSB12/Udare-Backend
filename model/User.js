@@ -79,7 +79,13 @@ const userSchema = new mongoose.Schema({
         currentStreak: {
             type: Number,
             deafult: 0
-        }
+        },
+        streakTrophies: [{
+            type: String,
+        }],
+        pointsTrophies: [{
+            type: String,
+        }]
     }
          
 });
