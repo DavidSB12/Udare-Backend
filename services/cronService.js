@@ -15,23 +15,19 @@ const configureCronJobs = () => {
 
   cron.schedule("0 0 * * *", async () => {
     try {
-      let yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      yesterday.setHours(0, 0, 0, 0);
+      const now = new Date();
+      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      // Obtiene todos los usuarios
       const users = await userRepository.getAllUsers();
 
-
       for (const user of users) {
-        let posts = userRepository.getLastDayPostsOfUser(user);
+        let posts = userRepository.getLastDayPostsOfUser(user, yesterday);
 
         if(posts.length === 0) {
           user.profile.currentStreak = 0;
           await userRepository.updateUserById(user._id,user);
         }
       }
-      console.log(`Successfully reset all streaks for users.`);
     } catch (error) {
       console.error("Error checking all users streaks:", error);
     }

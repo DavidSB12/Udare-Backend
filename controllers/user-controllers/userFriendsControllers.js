@@ -30,9 +30,6 @@ const followUser = async (req, res) => {
   try {
     const user = await userRepository.getUserById(userId);
     const userToFollow = await userRepository.getUserById(userToFollowId);
-    console.log("Follow------");
-    console.log(user)
-    console.log(userToFollow)
 
     if (!user || !userToFollowId) {
       return res.status(404).json({ message: "User not found." });

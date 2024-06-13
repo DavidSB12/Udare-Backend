@@ -167,12 +167,13 @@ const updateDailyChallenge = async () => {
   }
 };
 
-const getLastDayPostsOfUser = async (user) => {
+const getLastDayPostsOfUser = async (user, yesterday) => {
   try {
     const posts = await Post.find({
       userID: user._id,
       date: { $gte: yesterday },
     });
+    return posts;
   } catch (err) {
     throw new Error(
       "Error changing the dailyChallengeCompleted atribute of all users: " +

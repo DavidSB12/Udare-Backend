@@ -23,12 +23,6 @@ const client = new S3Client({
 async function uploadImageService(imageToUpload) {
   const uniqueKey = randomImageName();
 
-  /*
-  const resizeImage = await sharp(imageToUpload.buffer)
-    .resize({ height: 1920, width: 1080, fit: "contain" })
-    .toBuffer();
-    */
-
   const uploadParams = {
     Bucket: AWS_BUCKET_NAME,
     Key: uniqueKey,
